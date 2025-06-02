@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
-#include "Decoder.h"
-#include "Coder.h"
+#include "decoder.h"
+#include "coder.h"
 
 
 
