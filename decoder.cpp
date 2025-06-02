@@ -1,5 +1,7 @@
 #include "decoder.h"
 #include <stdexcept>
+#include <iostream>  
+#include <cctype> 
 
 void Decoder::setTestMode(bool mode) { 
     testMode = mode; 
