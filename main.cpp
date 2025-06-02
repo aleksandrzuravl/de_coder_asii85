@@ -21,7 +21,7 @@ int main(int argc, char* argv[]) {
             
                 Coder coder;
                 std::string value = coder.getUserInput();
-                std::string result = coder.encodeBlock(value);
+                std::string result = coder.encodeString(value);
                 coder.encodeString(result);
                 
             } else {
