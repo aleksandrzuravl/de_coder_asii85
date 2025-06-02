@@ -13,16 +13,16 @@ int main(int argc, char* argv[]) {
             if (flag == "-d") {
             
                 Decoder decoder;
-                std::string value = decoder.getUserValue();
-                std::vector<uint8_t> result = decoder.decodeASCII85(value);
-                decoder.printResultDecoder(result);
+                std::string value = decoder.getUserInput();
+                std::vector<uint8_t> result = decoder.decodeData(value);
+                decoder.displayResult(result);
                 
             } else if (flag == "-e") {
             
                 Coder coder;
-                std::string value = coder.getUserValue();
-                std::string result = coder.codeSTRING(value);
-                coder.printResultCoder(result);
+                std::string value = coder.getUserInput();
+                std::string result = coder.encodeBlock(value);
+                coder.encodeString(result);
                 
             } else {
                 std::cerr << "Unknown flag. Use -d for decode or -e for encode.\n";
