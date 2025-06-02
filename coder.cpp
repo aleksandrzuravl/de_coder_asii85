@@ -1,5 +1,6 @@
 #include "coder.h"
 #include <stdexcept>
+#include <iostream>
 
 std::string Coder::getUserInput() const {
     std::string input;
