@@ -3,6 +3,7 @@
 
 #include "decoder.h"
 #include <string>
+#include <iostream> 
 
 class Coder : public Decoder {
 public:
