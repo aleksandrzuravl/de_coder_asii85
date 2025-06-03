@@ -9,27 +9,36 @@ SRCDIR := src
 TESTDIR := test
 
 TARGET := $(BINDIR)/Start
-TEST_TARGET := $(BINDIR)/codec_test
+MAIN_TEST_TARGET := $(BINDIR)/codec_test
+RANDOM_TEST_TARGET := $(BINDIR)/random_test
 
 SRCS := $(wildcard $(SRCDIR)/*.cpp)
 MAIN_SRC := $(SRCDIR)/main.cpp
 OBJS := $(patsubst $(SRCDIR)/%.cpp,$(BUILDDIR)/%.o,$(filter-out $(MAIN_SRC),$(SRCS)))
 
-TEST_SRC := $(TESTDIR)/test.cpp
-TEST_OBJS := $(filter-out $(BUILDDIR)/main.o,$(OBJS)) $(BUILDDIR)/test.o
+TEST_SRCS := $(wildcard $(TESTDIR)/*.cpp)
+TEST_OBJS := $(filter-out $(BUILDDIR)/main.o,$(OBJS)) \
+             $(patsubst $(TESTDIR)/%.cpp,$(BUILDDIR)/%.o,$(TEST_SRCS))
 
-.PHONY: all test clean
+.PHONY: all test random_test clean
 
 all: $(BUILDDIR) $(BINDIR) $(TARGET)
 
-test: $(TEST_TARGET)
-	@$(TEST_TARGET)
+test: $(MAIN_TEST_TARGET)
+	@$(MAIN_TEST_TARGET)
+
+random_test: $(RANDOM_TEST_TARGET)
+	@$(RANDOM_TEST_TARGET)
 
 $(TARGET): $(OBJS) $(BUILDDIR)/main.o
 	@mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $^
 
-$(TEST_TARGET): $(TEST_OBJS) $(BUILDDIR)/test.o
+$(MAIN_TEST_TARGET): $(filter-out $(BUILDDIR)/random_test.o,$(TEST_OBJS))
+	@mkdir -p $(@D)
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $^ $(GTEST_LIBS)
+
+$(RANDOM_TEST_TARGET): $(filter-out $(BUILDDIR)/test.o,$(TEST_OBJS))
 	@mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $^ $(GTEST_LIBS)
 
@@ -37,7 +46,7 @@ $(BUILDDIR)/%.o: $(SRCDIR)/%.cpp
 	@mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-$(BUILDDIR)/test.o: $(TESTDIR)/test.cpp
+$(BUILDDIR)/%.o: $(TESTDIR)/%.cpp
 	@mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) -I$(TESTDIR) -c $< -o $@
 
